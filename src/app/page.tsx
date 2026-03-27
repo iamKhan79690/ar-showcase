@@ -47,7 +47,6 @@ export default function Home() {
             >
               {/* Inline preview model */}
               <div className="relative bg-zinc-800" style={{ pointerEvents: 'none' }}>
-                {/* @ts-ignore */}
                 <model-viewer
                   src={product.glbUrl}
                   alt={product.name}
@@ -125,7 +124,6 @@ export default function Home() {
 
           {/* Full 3D Viewer */}
           <div className="flex-1 relative">
-            {/* @ts-ignore */}
             <model-viewer
               src={selected.glbUrl}
               ios-src={selected.usdzUrl}

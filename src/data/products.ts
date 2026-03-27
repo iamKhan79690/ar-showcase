@@ -1,4 +1,4 @@
-export type Domain = 'food'
+export type Domain = 'food' | 'jewellery' | 'furniture'
 
 export interface Product {
   id: string

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 interface ModelViewerProps {
   glbUrl: string
@@ -24,7 +24,6 @@ export default function ModelViewer({
   }, [])
 
   return (
-    // @ts-ignore
     <model-viewer
       src={glbUrl}
       ios-src={usdzUrl}

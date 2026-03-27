@@ -54,7 +54,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2">
               <span className="text-white font-semibold text-sm">📱 View in AR</span>
               <p className="text-zinc-400 text-xs leading-relaxed">
-                Click the <strong className="text-white">"View in AR"</strong> button on the 3D model.
+                Click the <strong className="text-white">&quot;View in AR&quot;</strong> button on the 3D model.
                 On Android it launches in your camera. On iPhone it opens AR Quick Look.
                 No app download needed.
               </p>
@@ -69,7 +69,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 <span>🔍</span> Pinch to zoom in and out
               </div>
               <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                <span>📱</span> Tap "View in AR" to place on your table
+                <span>📱</span> Tap &quot;View in AR&quot; to place on your table
               </div>
             </div>
           </div>
