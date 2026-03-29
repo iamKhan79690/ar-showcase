@@ -9,8 +9,8 @@ const geistSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "ARShow — 3D Product Showcase",
-  description: "View any product in 3D and Augmented Reality — no app needed.",
+  title: "Visual Dine — 3D & AR Menu Experience",
+  description: "Transform your restaurant menu into an immersive 3D & AR experience. Let diners see dishes before they order.",
 };
 
 export default function RootLayout({
@@ -19,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} antialiased bg-black text-white`}>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${geistSans.variable} antialiased bg-[#f5f5f5] text-gray-900`}>
         {children}
       </body>
     </html>

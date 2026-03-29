@@ -1,170 +1,193 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { products, Product } from '@/data/products'
+import Link from 'next/link'
+
+const features = [
+  { icon: '✨', title: 'Engage Instantly', desc: 'Capture attention with photorealistic 3D dishes that customers can interact with before ordering.' },
+  { icon: '🍽️', title: 'Simplify Ordering', desc: 'Eliminate guesswork — diners see exactly what they\'re getting, reducing order errors and returns.' },
+  { icon: '📈', title: 'Drive Sales', desc: 'Restaurants using 3D menus see up to 25% increase in average order value.' },
+  { icon: '🌟', title: 'Impress Guests', desc: 'Deliver a premium tech-forward dining experience that gets guests talking and sharing.' },
+  { icon: '⚡', title: 'Optimize Staff', desc: 'Fewer questions about dishes means faster table turns and happier front-of-house teams.' },
+  { icon: '🏆', title: 'Competitive Edge', desc: 'Stand out in a crowded market with cutting-edge AR technology your competitors don\'t have.' },
+]
+
+const howItWorks = [
+  { step: '01', title: 'We Photograph Your Menu', desc: 'Our team visits your restaurant and captures each dish using advanced photogrammetry — no disruption to service.' },
+  { step: '02', title: 'We Build 3D Models', desc: 'Each dish is turned into a photorealistic, interactive 3D model optimized for web and mobile.' },
+  { step: '03', title: 'You Go Live', desc: 'Models go live on your digital menu or via QR codes on tables. Diners explore dishes in 3D and AR instantly.' },
+]
+
+const faqs = [
+  { q: 'How does Visual Dine work?', a: 'We photograph your dishes using photogrammetry to create photorealistic 3D models. These are hosted on our platform and accessible via QR codes on your table or integrated into your digital menu.' },
+  { q: 'Do my customers need to download an app?', a: 'No. Visual Dine works entirely in the browser. Customers simply scan a QR code or tap a link — no app download required. Works on both iPhone and Android.' },
+  { q: 'How long does setup take?', a: 'A typical restaurant with 30-50 dishes can be fully digitized and live within 2 weeks. We handle everything from photography to deployment.' },
+  { q: 'What does it cost?', a: 'We offer flexible plans starting from a monthly subscription. Book a demo to get a custom quote based on your menu size and needs.' },
+  { q: 'Can I update my menu easily?', a: 'Yes. Our dashboard lets you add, remove, or swap dishes anytime. New dish photography can be scheduled on-demand.' },
+  { q: 'Does it work with my existing POS system?', a: 'Visual Dine integrates with major POS systems including Toast, Square, and Clover. We also offer a standalone option.' },
+]
 
 export default function Home() {
-  const [selected, setSelected] = useState<Product | null>(null)
+  const [scrolled, setScrolled] = useState(false)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   useEffect(() => {
     import('@google/model-viewer')
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <main className="min-h-screen bg-black">
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b border-zinc-900">
-        <span className="text-white font-bold text-xl tracking-tight">ARShow</span>
-        <span className="text-zinc-400 text-sm">3D · AR · Any Domain</span>
+    <main className="min-h-screen bg-[#f5f5f5]">
+      {/* Navigation */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm' : ''}`}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+          <span className="text-gray-900 font-bold text-xl tracking-tight">Visual Dine</span>
+          <div className="hidden md:flex items-center gap-8 text-sm text-gray-500">
+            <a href="#features" className="hover:text-gray-900 transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-gray-900 transition-colors">How It Works</a>
+            <a href="#faq" className="hover:text-gray-900 transition-colors">FAQ</a>
+            <Link href="/demo" className="bg-gray-900 text-white font-semibold px-5 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+              Try Demo
+            </Link>
+          </div>
+          <Link href="/demo" className="md:hidden bg-gray-900 text-white font-semibold px-4 py-2 rounded-lg text-sm">
+            Demo
+          </Link>
+        </div>
       </nav>
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center text-center px-6 py-16 gap-6">
-        <div className="inline-block bg-zinc-900 border border-zinc-700 text-zinc-300 text-xs px-4 py-1.5 rounded-full">
-          No app download needed · Works in your browser
-        </div>
-        <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight max-w-3xl">
-          See it in <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">3D</span> before you buy
-        </h1>
-        <p className="text-zinc-400 text-lg max-w-xl">
-          We convert any real-world product into a WebAR experience. Click any dish to view in full 3D — then tap <strong className="text-white">View in AR</strong> on your phone.
-        </p>
-      </section>
-
-      {/* 3D Product Grid */}
-      <section className="px-6 pb-24 max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-2">
-          🍔 <span>Food & Dining</span>
-          <span className="text-zinc-500 text-sm font-normal ml-2">— click any dish to view in 3D</span>
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-500 hover:scale-105 transition-all duration-300 cursor-pointer group"
-              onClick={() => setSelected(product)}
-            >
-              {/* Inline preview model */}
-              <div className="relative bg-zinc-800" style={{ pointerEvents: 'none' }}>
-                <model-viewer
-                  src={product.glbUrl}
-                  alt={product.name}
-                  auto-rotate
-                  shadow-intensity="1"
-                  environment-image="neutral"
-                  style={{ width: '100%', height: '280px', backgroundColor: 'transparent' }}
-                />
-                {/* Click overlay with expand icon */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/30 rounded-t-2xl">
-                  <div className="bg-white text-black font-bold text-sm px-5 py-2.5 rounded-full flex items-center gap-2 shadow-lg">
-                    <span>⛶</span> View in 3D
-                  </div>
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="p-4">
-                <h3 className="text-white font-semibold text-lg">{product.name}</h3>
-                <p className="text-zinc-400 text-sm mt-1">{product.description}</p>
-                <div className="flex items-center justify-between mt-3">
-                  <span className="text-white font-bold text-lg">{product.price}</span>
-                  <span className="text-xs bg-zinc-800 text-zinc-300 px-3 py-1 rounded-full border border-zinc-700">
-                    3D · AR Ready
-                  </span>
-                </div>
-              </div>
+      <section className="pt-28 pb-16 px-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="flex flex-col gap-6">
+            <div className="inline-block self-start bg-white border border-gray-200 text-gray-500 text-xs px-4 py-1.5 rounded-full shadow-sm">
+              No app needed · Works in any browser
             </div>
-          ))}
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900">
+              See Your Menu Come Alive in{' '}
+              <span className="text-gray-500">3D & AR</span>
+            </h1>
+            <p className="text-gray-500 text-lg max-w-lg">
+              Transform your restaurant menu into an immersive experience. Let diners visualize dishes in stunning 3D before they order — no app needed.
+            </p>
+            <div className="flex gap-4 flex-wrap">
+              <a href="#faq" className="bg-gray-900 text-white font-bold px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors text-base">
+                Book a Demo
+              </a>
+              <Link href="/demo" className="border border-gray-300 text-gray-900 font-semibold px-8 py-3 rounded-lg hover:border-gray-900 transition-colors text-base bg-white">
+                Try Demo
+              </Link>
+            </div>
+          </div>
+
+          {/* Single 3D Dish — centered */}
+          <div className="flex items-center justify-center h-[350px] md:h-[600px]">
+            <div className="animate-float w-[300px] h-[300px] md:w-[450px] md:h-[450px]">
+              <model-viewer
+                src="/models/Avocado_burger.glb"
+                alt="Featured dish"
+                auto-rotate
+                camera-controls
+                rotation-per-second="30deg"
+                shadow-intensity="0.5"
+                environment-image="neutral"
+                style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-zinc-950 border-t border-zinc-900 px-6 py-24">
-        <h2 className="text-3xl font-bold text-center text-white mb-12">How it works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {[
-            { step: '01', title: 'We scan your product', desc: 'Using photogrammetry or AI, we create a precise 3D model of your real object.' },
-            { step: '02', title: 'We host it for you', desc: 'Your 3D model is accessible via a simple link or QR code — no app needed.' },
-            { step: '03', title: 'Customers see it in AR', desc: 'They open in browser, tap "View in AR" — it appears on their real table.' },
-          ].map((item) => (
-            <div key={item.step} className="flex flex-col gap-3">
-              <span className="text-purple-400 font-mono text-sm">{item.step}</span>
-              <h3 className="text-white font-semibold text-lg">{item.title}</h3>
-              <p className="text-zinc-400 text-sm">{item.desc}</p>
-            </div>
-          ))}
+      {/* Features */}
+      <section id="features" className="px-6 py-24 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">Why Restaurants Choose <span className="text-gray-500">Visual Dine</span></h2>
+          <p className="text-gray-500 text-center max-w-xl mx-auto mb-16">Everything you need to create a modern, interactive dining experience that drives revenue.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((f) => (
+              <div key={f.title} className="bg-[#f9f9f9] border border-gray-200 rounded-2xl p-6 hover:border-gray-400 hover:shadow-lg transition-all duration-300">
+                <div className="text-3xl mb-4">{f.icon}</div>
+                <h3 className="text-gray-900 font-semibold text-lg mb-2">{f.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="how-it-works" className="px-6 py-24 bg-[#f5f5f5]">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">How It <span className="text-gray-500">Works</span></h2>
+          <p className="text-gray-500 text-center max-w-lg mx-auto mb-16">Three simple steps to transform your menu into an interactive experience.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {howItWorks.map((item) => (
+              <div key={item.step} className="text-center">
+                <div className="w-14 h-14 rounded-full bg-gray-900 text-white flex items-center justify-center text-lg font-bold mx-auto mb-5">{item.step}</div>
+                <h3 className="text-gray-900 font-semibold text-lg mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section className="px-6 py-20 bg-gray-900">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Elevate Your Menu?</h2>
+          <p className="text-gray-400 mb-8 max-w-lg mx-auto">Join forward-thinking restaurants using 3D and AR to delight guests and boost orders.</p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <a href="#faq" className="bg-white text-gray-900 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors text-base">
+              Get Started
+            </a>
+            <Link href="/demo" className="border border-gray-600 text-white font-semibold px-8 py-3 rounded-lg hover:border-white transition-colors text-base">
+              See Live Demo
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="px-6 py-24 bg-white">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">Frequently Asked <span className="text-gray-500">Questions</span></h2>
+          <div className="flex flex-col gap-3">
+            {faqs.map((f, i) => (
+              <div key={i} className="border border-gray-200 rounded-xl overflow-hidden bg-[#f9f9f9]">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-100 transition-colors"
+                >
+                  <span className="text-gray-900 font-medium">{f.q}</span>
+                  <span className={`text-gray-400 text-xl transition-transform duration-300 ${openFaq === i ? 'rotate-45' : ''}`}>+</span>
+                </button>
+                <div className={`faq-content ${openFaq === i ? 'open' : ''}`}>
+                  <p className="px-6 pb-4 text-gray-500 text-sm leading-relaxed">{f.a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="text-center text-zinc-600 text-sm py-8 border-t border-zinc-900">
-        ARShow © 2025 · Built with Next.js + Google model-viewer
-      </footer>
-
-      {/* Fullscreen Modal */}
-      {selected && (
-        <div
-          className="fixed inset-0 z-50 bg-black/95 flex flex-col"
-          onClick={(e) => { if (e.target === e.currentTarget) setSelected(null) }}
-        >
-          {/* Modal Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 flex-shrink-0">
-            <div>
-              <p className="text-zinc-500 text-xs uppercase tracking-widest">Food & Dining</p>
-              <h2 className="text-white font-bold text-xl">{selected.name}</h2>
-            </div>
-            <button
-              onClick={() => setSelected(null)}
-              className="text-zinc-400 hover:text-white text-2xl font-light w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-800 transition-colors"
-            >
-              ✕
-            </button>
+      <footer className="border-t border-gray-200 px-6 py-12 bg-[#f5f5f5]">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <span className="text-gray-900 font-bold text-lg">Visual Dine</span>
+            <p className="text-gray-400 text-sm mt-1">&copy; 2025 Visual Dine. All rights reserved.</p>
           </div>
-
-          {/* Full 3D Viewer */}
-          <div className="flex-1 relative">
-            <model-viewer
-              src={selected.glbUrl}
-              ios-src={selected.usdzUrl}
-              alt={selected.name}
-              ar
-              ar-modes="webxr scene-viewer quick-look"
-              camera-controls
-              auto-rotate
-              shadow-intensity="1"
-              environment-image="neutral"
-              style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
-            >
-              <button
-                slot="ar-button"
-                style={{
-                  position: 'absolute',
-                  bottom: '24px',
-                  right: '24px',
-                  background: 'white',
-                  color: 'black',
-                  border: 'none',
-                  borderRadius: '12px',
-                  padding: '12px 24px',
-                  fontWeight: 700,
-                  fontSize: '15px',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                }}
-              >
-                📱 View in AR
-              </button>
-            </model-viewer>
-          </div>
-
-          {/* Modal Footer */}
-          <div className="flex items-center justify-between px-6 py-4 border-t border-zinc-800 flex-shrink-0">
-            <p className="text-zinc-400 text-sm">{selected.description}</p>
-            <span className="text-white font-bold text-xl ml-6 flex-shrink-0">{selected.price}</span>
+          <div className="flex gap-6 text-gray-500 text-sm">
+            <a href="#features" className="hover:text-gray-900 transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-gray-900 transition-colors">How It Works</a>
+            <a href="#faq" className="hover:text-gray-900 transition-colors">FAQ</a>
+            <Link href="/demo" className="hover:text-gray-900 transition-colors">Demo</Link>
           </div>
         </div>
-      )}
+      </footer>
     </main>
   )
 }
